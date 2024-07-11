@@ -1,5 +1,3 @@
-//go:build !windows && !darwin && !openbsd && !freebsd && !aix && !netbsd && !solaris
-
 package memcall
 
 import (
@@ -11,9 +9,6 @@ import (
 
 // Lock is a wrapper for mlock(2), with extra precautions.
 func Lock(b []byte) error {
-	// Advise the kernel not to dump. Ignore failure.
-	unix.Madvise(b, unix.MADV_DONTDUMP)
-
 	// Call mlock.
 	if err := unix.Mlock(b); err != nil {
 		return fmt.Errorf("<memcall> could not acquire lock on %p, limit reached? [Err: %s]", _getStartPtr(b), err)
